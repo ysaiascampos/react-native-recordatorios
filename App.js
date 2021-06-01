@@ -1,22 +1,41 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Modal } from 'react-native';
 import Item from './components/Item';
 import Button from './components/Button';
-import datos from './Datos';
+import Input from './components/Input';
 
 
 
 export default function App() {
   const [state, setState] = useState({
-    data: datos,
+    data: [],
+    isVisible: false,
+    text: "",
   })
+  
   const handlePress = () => {
-
+    setState({...state,
+      isVisible: true
+    })
+  }
+  const handleChange = text => {
+    setState({...state,
+      text
+    })
+  }
+  const handleSave = () => {
+    const { text, data } = state
+    const datos = [{ key: Math.random().toString(), title: text }].concat(data);
+    setState({...state,
+      data: datos,
+      isVisible: false,
+      text: "",
+    })
   }
   const { data } = state;
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,styles.gray]}>
       <View style={styles.header}>
         <Text style={styles.title}>Recordatorio</Text>
       </View>
@@ -29,6 +48,21 @@ export default function App() {
         renderItem={Item}
       />
       </View>
+      <Modal
+        visible={state.isVisible}
+        animationType="slide"
+
+      >
+        <View  style={[styles.container, styles.center]}>
+          <Text style={styles.modalTitle}>Ingrese Recordatorio</Text>
+          <Input 
+            placeholder="Recordatorio" 
+            onChangeText={handleChange} 
+            value={state.text}
+          />
+          <Button title="Guardar" onPress={handleSave} />
+        </View>
+      </Modal>
       <StatusBar style="auto" />
     </View>
   );
@@ -38,6 +72,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  center: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   header: {
     height: 100,
@@ -58,5 +96,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-},
+  },
+  gray: {
+    backgroundColor: "#eee",
+  },
+  modalTitle: {
+    fontSize: 28,
+  },
 });
