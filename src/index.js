@@ -1,11 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, FlatList, Modal } from 'react-native';
-import Item from './components/Item';
-import Button from './components/Button';
-import Input from './components/Input';
-
-
+import { Button, Input, Item } from './components';
 
 export default () => {
   const [state, setState] = useState({
